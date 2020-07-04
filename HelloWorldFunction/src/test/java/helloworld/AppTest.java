@@ -18,4 +18,9 @@ public class AppTest {
     assertTrue(content.contains("\"hello world\""));
     assertTrue(content.contains("\"location\""));
   }
+
+  @Test
+  public void shouldNotThrow_IfInputIsString() {
+    new App().handleRequest("some string", null);
+  }
 }
