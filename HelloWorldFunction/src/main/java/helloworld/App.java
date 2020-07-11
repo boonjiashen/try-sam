@@ -18,6 +18,8 @@ public class App implements RequestHandler<Object, Object> {
 
     public Object handleRequest(final Object input, final Context context) {
         System.out.println("Input = " + input);
+        System.out.println("Hello world!");
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
