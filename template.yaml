@@ -9,14 +9,20 @@ Description: >
 Globals:
   Function:
     Timeout: 20
+    Runtime: java8
+    CodeUri: HelloWorldFunction
 
 Resources:
+  S3Putter:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: me.jiashenb.trysam.S3Putter::handleRequest
+      MemorySize: 512
+
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: HelloWorldFunction
       Handler: helloworld.App::handleRequest
-      Runtime: java8
       MemorySize: 512
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
