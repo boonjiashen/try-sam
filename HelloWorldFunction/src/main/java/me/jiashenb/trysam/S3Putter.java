@@ -23,7 +23,7 @@ public class S3Putter implements RequestHandler<String, Void> {
 
     private static final String BUCKET_NAME = System.getenv(BUCKET_NAME_ENVVAR);
 
-    private static final int NUM_OBJECTS_TO_PUT = 100;
+    private static final int NUM_OBJECTS_TO_PUT = 50;
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 
