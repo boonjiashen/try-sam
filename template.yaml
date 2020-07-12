@@ -23,7 +23,7 @@ Resources:
         - arn:aws:iam::aws:policy/AdministratorAccess
       Environment:
         Variables:
-          BUCKET_NAME: !Ref Bucket
+          BUCKET_NAME: !Ref MyBucket
 
   DdbPutter:
     Type: AWS::Serverless::Function
@@ -33,12 +33,29 @@ Resources:
         - arn:aws:iam::aws:policy/AdministratorAccess
       Environment:
         Variables:
-          TABLE_NAME: !Ref Table
+          TABLE_NAME: !Ref MyTable
 
-  Table:
+  MyTable:
     Type: AWS::Serverless::SimpleTable
     Properties: {}
 
-  Bucket:
+  MyStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Definition:
+        StartAt: Put in S3
+        States:
+          Put in S3:
+            Type: Task
+            Resource: !GetAtt S3Putter.Arn
+            Next: Put in Ddb
+          Put in Ddb:
+            Type: Task
+            Resource: !GetAtt DdbPutter.Arn
+            End: true
+      Policies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  MyBucket:
     Type: AWS::S3::Bucket
     Properties: {}
