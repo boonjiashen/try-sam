@@ -5,16 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.ListTablesResponse;
-
-import static org.mockito.Mockito.when;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @ExtendWith(MockitoExtension.class)
 public class S3PutterTest {
 
     @Mock
-    private static DynamoDbClient client;
+    private static S3Client client;
 
     private S3Putter putter;
 
@@ -25,8 +22,6 @@ public class S3PutterTest {
 
     @Test
     public void shouldNotThrow() {
-        when(client.listTables()).thenReturn(ListTablesResponse.builder().build());
-
         putter.handleRequest("", null);
     }
 }
