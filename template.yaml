@@ -20,6 +20,7 @@ Resources:
       MemorySize: 512
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess
+      Tracing: Active
       Environment:
         Variables:
           BUCKET_NAME: !Ref Bucket

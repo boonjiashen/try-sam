@@ -25,6 +25,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:2.21.0")
     testImplementation("org.mockito:mockito-junit-jupiter:2.23.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
+
+    compile("com.amazonaws:aws-xray-recorder-sdk-aws-sdk-v2-instrumentor:2.6.1")
 }
 
 group = 'helloworld'
