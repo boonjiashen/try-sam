@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 import java.util.UUID;
 
-public class DdbPutter implements RequestHandler<String, Void> {
+public class PutterToDdb implements RequestHandler<String, Void> {
 
     public static final String TABLE_NAME_ENVVAR = "TABLE_NAME";
 
@@ -19,13 +19,13 @@ public class DdbPutter implements RequestHandler<String, Void> {
 
     private final DynamoDbTable<Id> table;
 
-    public DdbPutter() {
+    public PutterToDdb() {
         DynamoDbClient ddbClient = DynamoDbClient.builder().build();
         DynamoDbEnhancedClient ddbEnhancedClient = DynamoDbEnhancedClient.builder().dynamoDbClient(ddbClient).build();
         this.table = ddbEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Id.class));
     }
 
-    public DdbPutter(DynamoDbTable<Id> table) {
+    public PutterToDdb(DynamoDbTable<Id> table) {
         this.table = table;
     }
 

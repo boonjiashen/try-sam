@@ -15,16 +15,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class S3PutterTest {
+public class PutterToS3Test {
 
     @Mock
     private static S3AsyncClient client;
 
-    private S3Putter putter;
+    private PutterToS3 putter;
 
     @BeforeEach
     public void setup() {
-        putter = new S3Putter(client);
+        putter = new PutterToS3(client);
     }
 
     @Test

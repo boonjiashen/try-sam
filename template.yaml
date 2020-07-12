@@ -15,20 +15,20 @@ Globals:
     MemorySize: 512
 
 Resources:
-  S3Putter:
+  PutterToS3:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: me.jiashenb.trysam.S3Putter::handleRequest
+      Handler: me.jiashenb.trysam.PutterToS3::handleRequest
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess
       Environment:
         Variables:
           BUCKET_NAME: !Ref MyBucket
 
-  DdbPutter:
+  PutterToDdb:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: me.jiashenb.trysam.DdbPutter::handleRequest
+      Handler: me.jiashenb.trysam.PutterToDdb::handleRequest
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess
       Environment:
@@ -47,11 +47,11 @@ Resources:
         States:
           Put in S3:
             Type: Task
-            Resource: !GetAtt S3Putter.Arn
+            Resource: !GetAtt PutterToS3.Arn
             Next: Put in Ddb
           Put in Ddb:
             Type: Task
-            Resource: !GetAtt DdbPutter.Arn
+            Resource: !GetAtt PutterToDdb.Arn
             End: true
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess

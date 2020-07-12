@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class S3Putter implements RequestHandler<String, Void> {
+public class PutterToS3 implements RequestHandler<String, Void> {
 
     private static final String BUCKET_NAME_ENVVAR = "BUCKET_NAME";
 
@@ -29,11 +29,11 @@ public class S3Putter implements RequestHandler<String, Void> {
 
     private final S3AsyncClient s3AsyncClient;
 
-    public S3Putter(S3AsyncClient s3AsyncClient) {
+    public PutterToS3(S3AsyncClient s3AsyncClient) {
         this.s3AsyncClient = s3AsyncClient;
     }
 
-    public S3Putter() {
+    public PutterToS3() {
         this.s3AsyncClient = S3AsyncClient.builder()
                 .asyncConfiguration(b -> b.advancedOption(SdkAdvancedAsyncClientOption.FUTURE_COMPLETION_EXECUTOR
                 , EXECUTOR_SERVICE))

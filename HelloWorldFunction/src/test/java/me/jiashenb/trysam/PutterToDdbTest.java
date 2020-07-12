@@ -9,22 +9,22 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-class DdbPutterTest {
+class PutterToDdbTest {
 
     @Mock
     DynamoDbTable table;
 
-    private DdbPutter putter;
+    private PutterToDdb putter;
 
     @Test
     public void shouldNotThrow() throws Exception {
-        putter = new DdbPutter(table);
+        putter = new PutterToDdb(table);
         putter.handleRequest("", null);
     }
 
     @Test
     public void idShouldSet() {
-        DdbPutter.Id id = new DdbPutter.Id();
+        PutterToDdb.Id id = new PutterToDdb.Id();
         String expectedId = "hi";
         id.setId(expectedId);
 
