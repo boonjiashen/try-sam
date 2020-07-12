@@ -8,15 +8,20 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri('http://repo.maven.apache.org/maven2')
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter'
     }
 }
 
 dependencies {
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'software.amazon.awssdk:dynamodb:2.13.54'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 }
 
 group = 'helloworld'
