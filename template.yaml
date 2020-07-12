@@ -11,19 +11,33 @@ Globals:
     Timeout: 60
     Runtime: java8
     CodeUri: HelloWorldFunction
+    Tracing: Active
+    MemorySize: 512
 
 Resources:
   S3Putter:
     Type: AWS::Serverless::Function
     Properties:
       Handler: me.jiashenb.trysam.S3Putter::handleRequest
-      MemorySize: 512
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess
-      Tracing: Active
       Environment:
         Variables:
           BUCKET_NAME: !Ref Bucket
+
+  DdbPutter:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: me.jiashenb.trysam.DdbPutter::handleRequest
+      Policies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref Table
+
+  Table:
+    Type: AWS::Serverless::SimpleTable
+    Properties: {}
 
   Bucket:
     Type: AWS::S3::Bucket

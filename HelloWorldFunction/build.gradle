@@ -20,7 +20,9 @@ test {
 dependencies {
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
     implementation 'software.amazon.awssdk:dynamodb:2.13.54'
+    implementation 'software.amazon.awssdk:dynamodb-enhanced:2.13.54'
     implementation 'software.amazon.awssdk:s3:2.13.54'
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
     testImplementation("org.mockito:mockito-core:2.21.0")
     testImplementation("org.mockito:mockito-junit-jupiter:2.23.0")
