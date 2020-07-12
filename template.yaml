@@ -59,3 +59,30 @@ Resources:
   MyBucket:
     Type: AWS::S3::Bucket
     Properties: {}
+
+  MyQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 360  # 6 * LambdaTimeout
+
+  SenderToQueue:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: me.jiashenb.trysam.SenderToQueue::handleRequest
+      Policies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Environment:
+        Variables:
+          QUEUE_URL: !Ref MyQueue
+
+  ReceiverFromQueue:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: me.jiashenb.trysam.ReceiverFromQueue::handleRequest
+      Policies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Events:
+        QueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt MyQueue.Arn
