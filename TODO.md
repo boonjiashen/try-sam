@@ -1,1 +1,0 @@
-* Figure out why xray trace doesn't connect queue sender and receiver
