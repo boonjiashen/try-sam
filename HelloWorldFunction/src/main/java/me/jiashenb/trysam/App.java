@@ -10,22 +10,35 @@ import java.util.stream.Collectors;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import software.amazon.awssdk.http.HttpStatusCode;
 
 /**
  * Handler for requests to Lambda function.
  */
-public class App implements RequestHandler<Object, Object> {
+public class App implements RequestHandler<Object, APIGatewayProxyResponseEvent> {
 
-    public Object handleRequest(final Object input, final Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(final Object input, final Context context) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
         try {
             final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
-            String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);
-            return new GatewayResponse(output, headers, 200);
+            String output = String.format("{ \"message\": \"hello world v2\", \"location\": \"%s\" }", pageContents);
+
+            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+            response.setBody(output);
+            response.setHeaders(headers);
+            response.setStatusCode(HttpStatusCode.OK);
+
+            return response;
         } catch (IOException e) {
-            return new GatewayResponse("{}", headers, 500);
+            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+            response.setBody("{}");
+            response.setHeaders(headers);
+            response.setStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR);
+
+            return response;
         }
     }
 

@@ -1,20 +1,25 @@
 package me.jiashenb.trysam;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.http.HttpStatusCode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
+
+  private static App app;
+
+  @BeforeEach
+  public void setup() {
+    app = new App();
+  }
+
   @Test
-  public void successfulResponse() {
-    App app = new App();
-    GatewayResponse result = (GatewayResponse) app.handleRequest(null, null);
-    assertEquals(result.getStatusCode(), 200);
-    assertEquals(result.getHeaders().get("Content-Type"), "application/json");
-    String content = result.getBody();
-    assertNotNull(content);
-    assertTrue(content.contains("\"message\""));
-    assertTrue(content.contains("\"hello world\""));
-    assertTrue(content.contains("\"location\""));
+  public void shouldReturn200() {
+    int expectedStatusCode = HttpStatusCode.OK;
+    int actualStatusCode = app.handleRequest(null, null).getStatusCode();
+
+    assertEquals(expectedStatusCode, actualStatusCode);
   }
 }
