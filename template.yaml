@@ -13,6 +13,10 @@ Globals:
     CodeUri: HelloWorldFunction
     Tracing: Active
     MemorySize: 512
+  Api:
+    # This removes the "Stage" stage automatically created
+    # See https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html#sam-resource-api-properties
+    OpenApiVersion: 3.0.1
 
 Resources:
   PutterToS3:
@@ -86,3 +90,18 @@ Resources:
           Type: SQS
           Properties:
             Queue: !GetAtt MyQueue.Arn
+
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: me.jiashenb.trysam.App::handleRequest
+      Runtime: java8
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          PARAM1: VALUE
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /hello
+            Method: get
