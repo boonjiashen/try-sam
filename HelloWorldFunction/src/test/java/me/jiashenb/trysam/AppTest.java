@@ -1,12 +1,8 @@
 package me.jiashenb.trysam;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
-import me.jiashenb.trysam.App;
-import me.jiashenb.trysam.GatewayResponse;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
   @Test
