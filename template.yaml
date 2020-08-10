@@ -19,89 +19,41 @@ Globals:
     OpenApiVersion: 3.0.1
 
 Resources:
-  PutterToS3:
+  MyStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+
+  MyStreamNameParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Name: MyStreamName
+      Value: !Ref MyStream
+
+  StreamProducer:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: me.jiashenb.trysam.PutterToS3::handleRequest
+      Handler: me.jiashenb.trysam.StreamProducer::handleRequest
       Policies:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref MyBucket
-
-  PutterToDdb:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: me.jiashenb.trysam.PutterToDdb::handleRequest
-      Policies:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref MyTable
-
-  MyTable:
-    Type: AWS::Serverless::SimpleTable
-    Properties: {}
-
-  MyStateMachine:
-    Type: AWS::Serverless::StateMachine
-    Properties:
-      Definition:
-        StartAt: Put in S3
-        States:
-          Put in S3:
-            Type: Task
-            Resource: !GetAtt PutterToS3.Arn
-            Next: Put in Ddb
-          Put in Ddb:
-            Type: Task
-            Resource: !GetAtt PutterToDdb.Arn
-            End: true
-      Policies:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-
-  MyBucket:
-    Type: AWS::S3::Bucket
-    Properties: {}
-
-  MyQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      VisibilityTimeout: 360  # 6 * LambdaTimeout
-
-  SenderToQueue:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: me.jiashenb.trysam.SenderToQueue::handleRequest
-      Policies:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-      Environment:
-        Variables:
-          QUEUE_URL: !Ref MyQueue
-
-  ReceiverFromQueue:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: me.jiashenb.trysam.ReceiverFromQueue::handleRequest
-      Policies:
-        - arn:aws:iam::aws:policy/AdministratorAccess
+        - SSMParameterReadPolicy:
+            ParameterName: !Ref MyStreamNameParameter
+        - KinesisCrudPolicy:
+            StreamName: !Ref MyStream
       Events:
-        QueueEvent:
-          Type: SQS
+        CloudWatchSchedule:
+          Type: Schedule
           Properties:
-            Queue: !GetAtt MyQueue.Arn
+            Schedule: 'rate(1 minute)'
 
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  StreamConsumer:
+    Type: AWS::Serverless::Function
     Properties:
-      Handler: me.jiashenb.trysam.App::handleRequest
-      Runtime: java8
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
+      Handler: me.jiashenb.trysam.StreamConsumer::handleRequest
       Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        KinesisEvent:
+          Type: Kinesis
           Properties:
-            Path: /hello
-            Method: get
+            Stream: !GetAtt MyStream.Arn
+            StartingPosition: TRIM_HORIZON
+            Enabled: true
