@@ -72,18 +72,16 @@ Resources:
             Type: Pass
             Next: Parse to JSON
             Result:
-              myJsonString: "${MyJsonString}"
+              myJsonString:
+                !If
+                - IsTrue
+                - '[\"is\", \"true\"]'
+                - '[\"is\", \"false\"]'
           Parse to JSON:
             Type: Pass
             End: true
             InputPath: "$.myJsonString"
             Parameters:
               myJson.$: States.StringToJson($)
-      DefinitionSubstitutions:
-        MyJsonString:
-          !If
-          - IsTrue
-          - '[\"is\", \"true\"]'
-          - '[\"is\", \"false\"]'
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess
