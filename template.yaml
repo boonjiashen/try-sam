@@ -57,3 +57,23 @@ Resources:
             Stream: !GetAtt MyStream.Arn
             StartingPosition: TRIM_HORIZON
             Enabled: true
+
+  MyStringToJsonStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Definition:
+        StartAt: Create JSON string
+        States:
+          Create JSON string:
+            Type: Pass
+            Next: Parse to JSON
+            Result:
+              myJsonString: '["A", "B"]'
+          Parse to JSON:
+            Type: Pass
+            End: true
+            InputPath: "$.myJsonString"
+            Parameters:
+              myJson.$: States.StringToJson($)
+      Policies:
+        - arn:aws:iam::aws:policy/AdministratorAccess
