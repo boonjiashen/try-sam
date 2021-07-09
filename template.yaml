@@ -18,6 +18,10 @@ Globals:
     # See https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html#sam-resource-api-properties
     OpenApiVersion: 3.0.1
 
+Conditions:
+  IsTrue: !Equals ["true", "true"]
+  IsFalse: !Equals ["true", "false"]
+
 Resources:
   MyStream:
     Type: AWS::Kinesis::Stream
@@ -68,12 +72,18 @@ Resources:
             Type: Pass
             Next: Parse to JSON
             Result:
-              myJsonString: '["A", "B"]'
+              myJsonString: "${MyJsonString}"
           Parse to JSON:
             Type: Pass
             End: true
             InputPath: "$.myJsonString"
             Parameters:
               myJson.$: States.StringToJson($)
+      DefinitionSubstitutions:
+        MyJsonString:
+          !If
+          - IsTrue
+          - '[\"is\", \"true\"]'
+          - '[\"is\", \"false\"]'
       Policies:
         - arn:aws:iam::aws:policy/AdministratorAccess
